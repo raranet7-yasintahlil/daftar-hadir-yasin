@@ -6,46 +6,45 @@
     <title>Daftar Hadir Yasin & Tahlil</title>
     <style>
         * { box-sizing: border-box; font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        body { background-color: #f4f4f9; padding: 10px; font-size: 14px; }
+        body { background-color: #f4f4f9; padding: 10px; font-size: 13px; }
         .container { max-width: 100%; overflow-x: auto; }
         .login-box { max-width: 420px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 20px; }
         h2 { text-align: center; color: #34495e; margin-bottom: 20px; font-size: 16px; }
-        input, button, select { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-        button { background-color: #27ae60; color: white; border: none; cursor: pointer; font-weight: bold; }
+        input, button, select { padding: 8px; margin: 4px 0; border: 1px solid #999; border-radius: 2px; font-size: 13px; }
+        button { background-color: #27ae60; color: white; border: none; cursor: pointer; font-weight: bold; padding: 8px 14px; }
         button:hover { background-color: #219653; }
         .btn-secondary { background-color: #3498db; }
         .btn-secondary:hover { background-color: #2980b9; }
         table { border-collapse: collapse; width: 100%; background: white; margin-top: 10px; }
         th, td { border: 1px solid #333; padding: 4px 2px; text-align: center; vertical-align: middle; }
-        th { background-color: #ffc107; color: #000; font-weight: bold; font-size: 12px; }
-        .month-main { background-color: #4CAF50; color: white; font-size: 13px; }
-        .sub-header { background-color: #e8f5e9; font-size: 11px; }
-        .header-top { background-color: #c8e6c9; font-weight: bold; }
-        input.editable { width: 100%; max-width: 60px; border: none; background: transparent; text-align: center; padding: 2px; font-size: 12px; }
+        th { background-color: #ffd700; color: #000; font-weight: bold; font-size: 12px; }
+        .row-yellow { background-color: #fff200; }
+        .row-blue { background-color: #00bfff; color: #000; }
+        input.editable { width: 100%; max-width: 90px; border: none; background: transparent; text-align: center; padding: 2px; font-size: 13px; }
         input.editable:focus { background: #fff8c5; outline: 1px solid #ccc; }
-        input.readonly { background: transparent; border: none; text-align: center; width: 100%; pointer-events: none; font-size: 12px; }
+        input.readonly { background: transparent; border: none; text-align: center; width: 100%; pointer-events: none; font-size: 13px; }
         .hidden { display: none !important; }
-        .toolbar { margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        .toolbar button { width: auto; padding: 8px 12px; font-size: 13px; margin: 0; }
-        .toolbar select { width: auto; padding: 6px; margin: 0; }
+        .toolbar { margin-bottom: 12px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .toolbar button { width: auto; margin: 0; }
+        .toolbar select { width: auto; margin: 0; }
         .btn-danger { background-color: #e74c3c; }
         .btn-danger:hover { background-color: #c0392b; }
         .btn-print { background-color: #9b59b6; }
         .btn-print:hover { background-color: #8e44ad; }
-        .add-row-btn { margin-top: 10px; width: auto; display: inline-block; }
         .logout-btn { float: right; background-color: #e74c3c; }
         .logout-btn:hover { background-color: #c0392b; }
         .title-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
         .note { font-size: 12px; color: #666; margin-top: 8px; line-height: 1.5; }
-        .year-selector { display: flex; align-items: center; gap: 8px; }
-        .year-selector label { font-weight: bold; color: #2c3e50; }
-        .fixed-col { min-width: 50px; max-width: 50px; background-color: #ffc107; }
-        .name-col { min-width: 140px; max-width: 160px; background-color: #ffc107; }
-        .meeting-col { min-width: 65px; }
-        .total-row { background-color: #f0f0f0; font-weight: bold; background-color: #fff3cd; }
+        .period-row { background-color: #ffd700; font-weight: bold; }
+        .fixed-col { width: 45px; background-color: #ffd700; }
+        .name-col { min-width: 160px; background-color: #ffd700; text-align: left !important; padding-left: 8px !important; }
+        .month-col { width: 90px; }
+        .total-row { background-color: #00bfff; font-weight: bold; }
+        .period-label { font-weight: bold; background-color: #ffd700; padding: 4px 8px; display: inline-block; border: 1px solid #333; }
+        .period-wrapper { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
         @media print {
-            .toolbar, .logout-btn, .add-row-btn, .note, .year-selector { display: none !important; }
+            .toolbar, .logout-btn, .note, .period-wrapper button { display: none !important; }
             body { background: white; padding: 0; }
             table { border: 1px solid #000; font-size: 11px; }
             input { border: none !important; }
@@ -74,7 +73,7 @@
     </div>
 </div>
 
-<!-- HALAMAN DAFTAR HADIR -->
+<!-- HALAMAN UTAMA -->
 <div id="mainPage" class="container hidden">
     <div class="title-bar">
         <div>
@@ -85,18 +84,43 @@
     </div>
 
     <div class="toolbar" id="adminToolbar">
-        <div class="year-selector">
-            <label>📅 Pilih Tahun:</label>
+        <div class="period-wrapper">
+            <span class="period-label">PERIODE TAHUN:</span>
             <select id="yearSelect" onchange="changeYear()">
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
                 <option value="2025">2025</option>
                 <option value="2026" selected>2026</option>
                 <option value="2027">2027</option>
+                <option value="2028">2028</option>
+                <option value="2029">2029</option>
+                <option value="2030">2030</option>
+                <option value="2031">2031</option>
+                <option value="2032">2032</option>
+                <option value="2033">2033</option>
+                <option value="2034">2034</option>
+                <option value="2035">2035</option>
+                <option value="2036">2036</option>
+                <option value="2037">2037</option>
+                <option value="2038">2038</option>
+                <option value="2039">2039</option>
+                <option value="2040">2040</option>
+                <option value="2041">2041</option>
+                <option value="2042">2042</option>
+                <option value="2043">2043</option>
+                <option value="2044">2044</option>
+                <option value="2045">2045</option>
+                <option value="2046">2046</option>
+                <option value="2047">2047</option>
+                <option value="2048">2048</option>
+                <option value="2049">2049</option>
+                <option value="2050">2050</option>
             </select>
         </div>
         <button class="btn-print" onclick="window.print()">🖨️ Cetak</button>
         <button onclick="saveData()">💾 Simpan Perubahan</button>
         <button class="btn-danger" onclick="clearAllData()">🗑️ Hapus Data Tahun Ini</button>
-        <button class="add-row-btn" onclick="addNewRow()">➕ Tambah Nama</button>
+        <button onclick="addNewRow()">➕ Tambah Nama</button>
     </div>
 
     <table id="attendanceTable">
@@ -111,8 +135,7 @@
     <p class="note">
         💡 <strong>Cara Mengisi:</strong><br>
         • Isi angka = jumlah pendapatan/sedekah<br>
-        • Ketik V = Hadir<br>
-        • Baris JUMLAH di bawah otomatis menjumlahkan angka dari atas<br>
+        • Baris JUMLAH di bawah otomatis menjumlahkan angka per bulan<br>
         • Klik <strong>"Simpan Perubahan"</strong> agar data tidak hilang
     </p>
 </div>
@@ -126,8 +149,8 @@ const MONTHS = [
     {id:'mei', name:'MEI'}, {id:'jun', name:'JUN'}, {id:'jul', name:'JUL'}, {id:'ags', name:'AGS'},
     {id:'sep', name:'SEP'}, {id:'okt', name:'OKT'}, {id:'nov', name:'NOV'}, {id:'des', name:'DES'}
 ];
-const MEETINGS = [1, 2, 3, 4];
-const YEARS = ['2025','2026','2027'];
+const YEARS = [];
+for (let y = 2023; y <= 2050; y++) YEARS.push(String(y));
 
 let isAdmin = false;
 let currentYear = '2026';
@@ -148,17 +171,13 @@ const defaultNames = [
 function initDefaultDataForYear(year) {
     return defaultNames.map((name, index) => {
         const row = { no: index + 1, name: name };
-        MONTHS.forEach(m => {
-            MEETINGS.forEach(n => {
-                row[`${m.id}_m${n}`] = '';
-            });
-        });
+        MONTHS.forEach(m => row[m.id] = '');
         return row;
     });
 }
 
 function loadAllData() {
-    const saved = localStorage.getItem('attendanceDataFinal');
+    const saved = localStorage.getItem('attendanceDataFinalV2');
     if (saved) {
         allData = JSON.parse(saved);
         YEARS.forEach(y => {
@@ -171,7 +190,7 @@ function loadAllData() {
 }
 
 function saveData() {
-    localStorage.setItem('attendanceDataFinal', JSON.stringify(allData));
+    localStorage.setItem('attendanceDataFinalV2', JSON.stringify(allData));
     alert('✅ Data tahun ' + currentYear + ' berhasil disimpan!');
 }
 
@@ -216,44 +235,33 @@ function buildHeader() {
     let html = '';
     
     // Baris 1: TEMPAT
-    html += '<tr class="header-top">';
-    html += '<th rowspan="5" class="fixed-col">No</th>';
-    html += '<th rowspan="5" class="name-col">NAMA</th>';
-    MONTHS.forEach(m => {
-        html += `<th colspan="4" class="month-main">TEMPAT</th>`;
-    });
+    html += '<tr class="row-yellow">';
+    html += '<th class="fixed-col">No</th><th class="name-col">NAMA</th>';
+    MONTHS.forEach(m => html += `<th class="month-col">TEMPAT</th>`);
     html += '</tr>';
     
     // Baris 2: TGL
-    html += '<tr class="sub-header">';
-    MONTHS.forEach(m => {
-        MEETINGS.forEach(n => {
-            html += `<th class="meeting-col">TGL</th>`;
-        });
-    });
+    html += '<tr class="row-yellow">';
+    html += '<th></th><th></th>';
+    MONTHS.forEach(m => html += `<th>${m.name}</th>`);
     html += '</tr>';
     
-    // Baris 3: Nama Bulan
-    html += '<tr>';
-    MONTHS.forEach(m => {
-        html += `<th colspan="4" class="month-main">${m.name}</th>`;
-    });
+    // Baris 3: BLN
+    html += '<tr class="row-yellow">';
+    html += '<th></th><th></th>';
+    MONTHS.forEach(m => html += `<th>BLN</th>`);
     html += '</tr>';
     
-    // Baris 4: BLN
-    html += '<tr class="sub-header">';
-    MONTHS.forEach(m => {
-        MEETINGS.forEach(n => {
-            html += `<th class="meeting-col">BLN</th>`;
-        });
-    });
+    // Baris 4: Nama Bulan
+    html += '<tr class="row-yellow">';
+    html += '<th></th><th></th>';
+    MONTHS.forEach(m => html += `<th>${m.name}</th>`);
     html += '</tr>';
     
     // Baris 5: PENGABSEN
-    html += '<tr class="header-top">';
-    MONTHS.forEach(m => {
-        html += `<th colspan="4" class="month-main">PENGABSEN</th>`;
-    });
+    html += '<tr class="row-yellow">';
+    html += '<th></th><th></th>';
+    MONTHS.forEach(m => html += `<th>PENGABSEN</th>`);
     html += '</tr>';
     
     thead.innerHTML = html;
@@ -281,10 +289,7 @@ function renderTable() {
         let cells = `<td class="fixed-col">${row.no}</td><td class="name-col"><input type="text" class="${isAdmin?'editable':'readonly'}" value="${row.name}" data-field="name" data-index="${idx}" ${!isAdmin?'readonly':''}></td>`;
         
         MONTHS.forEach(m => {
-            MEETINGS.forEach(n => {
-                const key = `${m.id}_m${n}`;
-                cells += `<td><input type="text" class="${isAdmin?'editable':'readonly'}" value="${row[key]}" data-index="${idx}" data-key="${key}" ${!isAdmin?'readonly':''}></td>`;
-            });
+            cells += `<td class="row-yellow"><input type="text" class="${isAdmin?'editable':'readonly'}" value="${row[m.id]}" data-index="${idx}" data-month="${m.id}" ${!isAdmin?'readonly':''}></td>`;
         });
         
         tr.innerHTML = cells;
@@ -298,19 +303,16 @@ function renderTable() {
 function renderFooter() {
     const tfoot = document.getElementById('tableFooter');
     let html = '<tr class="total-row">';
-    html += '<td colspan="2"><strong>JUMLAH</strong></td>';
+    html += '<td colspan="2">JUMLAH</td>';
     
     MONTHS.forEach(m => {
-        MEETINGS.forEach(n => {
-            let total = 0;
-            const key = `${m.id}_m${n}`;
-            allData[currentYear].forEach(row => {
-                const val = String(row[key] || '').trim();
-                const num = parseFloat(val);
-                if (!isNaN(num)) total += num;
-            });
-            html += `<td>${total || ''}</td>`;
+        let total = 0;
+        allData[currentYear].forEach(row => {
+            const val = String(row[m.id] || '').trim();
+            const num = parseFloat(val);
+            if (!isNaN(num)) total += num;
         });
+        html += `<td>${total || ''}</td>`;
     });
     
     html += '</tr>';
@@ -321,13 +323,13 @@ function attachInputListeners() {
     document.querySelectorAll('input.editable').forEach(input => {
         input.addEventListener('input', function() {
             const idx = parseInt(this.dataset.index);
-            const key = this.dataset.key;
+            const monthId = this.dataset.month;
             const field = this.dataset.field;
             
             if (field === 'name') {
                 allData[currentYear][idx].name = this.value;
             } else {
-                allData[currentYear][idx][key] = this.value;
+                allData[currentYear][idx][monthId] = this.value;
             }
             renderFooter();
         });
@@ -337,19 +339,11 @@ function attachInputListeners() {
 function addNewRow() {
     const data = allData[currentYear];
     const newRow = { no: data.length + 1, name: '' };
-    MONTHS.forEach(m => {
-        MEETINGS.forEach(n => {
-            newRow[`${m.id}_m${n}`] = '';
-        });
-    });
+    MONTHS.forEach(m => newRow[m.id] = '');
     YEARS.forEach(y => {
         if (!allData[y]) allData[y] = initDefaultDataForYear(y);
         const copyRow = { no: allData[y].length + 1, name: '' };
-        MONTHS.forEach(m => {
-            MEETINGS.forEach(n => {
-                copyRow[`${m.id}_m${n}`] = '';
-            });
-        });
+        MONTHS.forEach(m => copyRow[m.id] = '');
         allData[y].push(copyRow);
     });
     data.push(newRow);
@@ -358,13 +352,4 @@ function addNewRow() {
 
 function clearAllData() {
     if (confirm('⚠️ Yakin ingin menghapus SEMUA data untuk tahun ' + currentYear + '? Tindakan ini tidak bisa dibatalkan!')) {
-        allData[currentYear] = initDefaultDataForYear(currentYear);
-        renderTable();
-    }
-}
-
-loadAllData();
-</script>
-
-</body>
-</html>
+        allData[currentYear] = initDefaultDataFor
