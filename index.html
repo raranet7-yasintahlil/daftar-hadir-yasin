@@ -9,23 +9,24 @@
         body { background-color: #f4f4f9; padding: 10px; }
         .container { max-width: 100%; overflow-x: auto; }
         .login-box { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 22px; }
         h2 { text-align: center; color: #34495e; margin-bottom: 20px; font-size: 18px; }
-        input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        input, button, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
         button { background-color: #27ae60; color: white; border: none; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #219653; }
         .btn-secondary { background-color: #3498db; }
         .btn-secondary:hover { background-color: #2980b9; }
         table { border-collapse: collapse; width: 100%; background: white; margin-top: 15px; }
-        th, td { border: 1px solid #333; padding: 6px; text-align: center; font-size: 13px; }
+        th, td { border: 1px solid #333; padding: 5px; text-align: center; font-size: 12px; white-space: nowrap; }
         th { background-color: #ffc107; color: #000; font-weight: bold; }
-        .month-header { background-color: #4CAF50; color: white; }
-        input.editable { width: 100%; border: none; background: transparent; text-align: center; padding: 2px; font-size: 13px; }
+        .month-header { background-color: #4CAF50; color: white; writing-mode: vertical-lr; transform: rotate(180deg); height: 80px; }
+        input.editable { width: 100%; border: none; background: transparent; text-align: center; padding: 2px; font-size: 12px; }
         input.editable:focus { background: #fff8c5; outline: 1px solid #ccc; }
         input.readonly { background: transparent; border: none; text-align: center; width: 100%; pointer-events: none; }
         .hidden { display: none !important; }
-        .toolbar { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .toolbar button { width: auto; padding: 8px 15px; font-size: 14px; }
+        .toolbar { margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .toolbar button { width: auto; padding: 8px 15px; font-size: 14px; margin: 0; }
+        .toolbar select { width: auto; padding: 8px; margin: 0; }
         .btn-danger { background-color: #e74c3c; }
         .btn-danger:hover { background-color: #c0392b; }
         .btn-print { background-color: #9b59b6; }
@@ -33,10 +34,12 @@
         .add-row-btn { margin-top: 15px; width: auto; display: inline-block; }
         .logout-btn { float: right; background-color: #e74c3c; }
         .logout-btn:hover { background-color: #c0392b; }
-        .title-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .title-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 15px; }
         .note { font-size: 12px; color: #666; margin-top: 10px; }
+        .year-selector { display: flex; align-items: center; gap: 10px; }
+        .year-selector label { font-weight: bold; color: #2c3e50; }
         @media print {
-            .toolbar, .logout-btn, .add-row-btn, .note { display: none !important; }
+            .toolbar, .logout-btn, .add-row-btn, .note, .year-selector { display: none !important; }
             body { background: white; }
             table { border: 1px solid #000; }
         }
@@ -60,7 +63,7 @@
         <input type="password" id="adminPass" placeholder="Masukkan Kode Akses">
         <button onclick="loginAdmin()">Masuk</button>
         <button class="btn-secondary" onclick="hideAdminLogin()">Kembali</button>
-        <p class="note" style="text-align:center;">⚠️ ID & Kode bawaan: <strong>panitia001</strong> / <strong>yasin2026</strong> — silakan ubah nanti!</p>
+        <p class="note" style="text-align:center;">⚠️ ID & Kode bawaan: <strong>panitia001</strong> / <strong>yasin2026</strong></p>
     </div>
 </div>
 
@@ -75,9 +78,17 @@
     </div>
 
     <div class="toolbar" id="adminToolbar">
+        <div class="year-selector">
+            <label>📅 Pilih Tahun:</label>
+            <select id="yearSelect" onchange="changeYear()">
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+                <option value="2027">2027</option>
+            </select>
+        </div>
         <button class="btn-print" onclick="window.print()">🖨️ Cetak</button>
         <button onclick="saveData()">💾 Simpan Perubahan</button>
-        <button class="btn-danger" onclick="clearAllData()">🗑️ Kosongkan Data</button>
+        <button class="btn-danger" onclick="clearAllData()">🗑️ Hapus Data Tahun Ini</button>
         <button class="add-row-btn" onclick="addNewRow()">➕ Tambah Nama</button>
     </div>
 
@@ -86,95 +97,104 @@
             <tr>
                 <th rowspan="2">No</th>
                 <th rowspan="2">NAMA</th>
-                <th class="month-header">JAN</th>
-                <th class="month-header">FEB</th>
-                <th class="month-header">APR</th>
-                <th class="month-header">MEI</th>
-                <th class="month-header">JUN</th>
-                <th class="month-header">JUL</th>
+                <th class="month-header">Jan</th>
+                <th class="month-header">Feb</th>
+                <th class="month-header">Mar</th>
+                <th class="month-header">Apr</th>
+                <th class="month-header">Mei</th>
+                <th class="month-header">Jun</th>
+                <th class="month-header">Jul</th>
+                <th class="month-header">Ags</th>
+                <th class="month-header">Sep</th>
+                <th class="month-header">Okt</th>
+                <th class="month-header">Nov</th>
+                <th class="month-header">Des</th>
                 <th rowspan="2">JUMLAH</th>
             </tr>
             <tr>
-                <th>AR<br>TGL<br>BLN</th>
-                <th>31<br>8<br>2</th>
-                <th>13<br>19<br>26</th>
-                <th>10<br>17<br>24<br>31</th>
-                <th>14<br>21<br>28</th>
-                <th>17<br>18<br>25</th>
+                <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Mei</th><th>Jun</th>
+                <th>Jul</th><th>Ags</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Des</th>
             </tr>
         </thead>
         <tbody id="tableBody">
-            <!-- Data akan diisi oleh JavaScript -->
         </tbody>
         <tfoot>
             <tr id="totalRow">
                 <td colspan="2"><strong>JUMLAH</strong></td>
                 <td id="total-jan">0</td>
                 <td id="total-feb">0</td>
+                <td id="total-mar">0</td>
                 <td id="total-apr">0</td>
                 <td id="total-mei">0</td>
                 <td id="total-jun">0</td>
                 <td id="total-jul">0</td>
+                <td id="total-ags">0</td>
+                <td id="total-sep">0</td>
+                <td id="total-okt">0</td>
+                <td id="total-nov">0</td>
+                <td id="total-des">0</td>
                 <td id="total-total">0</td>
             </tr>
         </tfoot>
     </table>
 
-    <p class="note">💡 Klik kolom kehadiran, ketik: <strong>V</strong> = Hadir, angka = jumlah kehadiran. Kosongkan = tidak hadir. Klik "Simpan Perubahan" agar tersimpan.</p>
+    <p class="note">💡 Klik kolom kehadiran, ketik: <strong>V</strong> = Hadir, angka = jumlah kehadiran. Kosongkan = tidak hadir. Klik "Simpan Perubahan" agar tersimpan. Gunakan kotak "Pilih Tahun" untuk berpindah periode tahun.</p>
 </div>
 
 <script>
-// Kode Akses Panitia — BISA DIUBAH SESUAI KEINGINAN
 const ADMIN_ID = 'panitia001';
 const ADMIN_PASS = 'yasin2026';
 
-let isAdmin = false;
-let attendanceData = [];
+const MONTHS = ['jan','feb','mar','apr','mei','jun','jul','ags','sep','okt','nov','des'];
+const YEARS = ['2025','2026','2027'];
 
-// Inisialisasi data awal
-function initDefaultData() {
-    const defaultNames = [
-        "AGUS MI", "AGUS NANDO", "ALFIAN", "ALIF", "AMRAN", "ASMARI", "BAMBANG",
-        "BASIR", "DARMO", "EKO", "FIRDAUS", "GUNAWAN", "HASANUDIN", "HERU",
-        "IBNU MAS'UD", "ILYAS", "IMRON", "JADI", "JAINURI", "KAIRUL ANAM",
-        "KALIM", "KANAFI", "KASTAMAN", "KOIRON", "KOLIK", "KOSIM", "M. ARIFUDIN",
-        "MAHZUNI", "MALIK", "MBAH MUL.", "MUAZIN HASAN", "MURSYIDIN", "MUSTOFA",
-        "NUR KHASAN", "NYONIK", "PADIL (SUPIR)", "RUSLAN", "SAHID", "SAIFUL SUWANDAR",
-        "SUKIS", "SULEONO", "SUMANTRI", "SURYONO", "SUTIONO", "SUUD", "SUWANDAR",
-        "SUWARTO", "UST. SIROJUL M", "WAHZUDI", "WIDIANTO", "YULIANTO", "YUNUS/MANU",
-        "YUSI", "ZUHRONI"
-    ];
-    
-    attendanceData = defaultNames.map((name, index) => ({
-        no: index + 1,
-        name: name,
-        jan: '', feb: '', apr: '', mei: '', jun: '', jul: ''
-    }));
+let isAdmin = false;
+let currentYear = '2026';
+let allData = {};
+
+const defaultNames = [
+    "AGUS MI", "AGUS NANDO", "ALFIAN", "ALIF", "AMRAN", "ASMARI", "BAMBANG",
+    "BASIR", "DARMO", "EKO", "FIRDAUS", "GUNAWAN", "HASANUDIN", "HERU",
+    "IBNU MAS'UD", "ILYAS", "IMRON", "JADI", "JAINURI", "KAIRUL ANAM",
+    "KALIM", "KANAFI", "KASTAMAN", "KOIRON", "KOLIK", "KOSIM", "M. ARIFUDIN",
+    "MAHZUNI", "MALIK", "MBAH MUL.", "MUAZIN HASAN", "MURSYIDIN", "MUSTOFA",
+    "NUR KHASAN", "NYONIK", "PADIL (SUPIR)", "RUSLAN", "SAHID", "SAIFUL SUWANDAR",
+    "SUKIS", "SULEONO", "SUMANTRI", "SURYONO", "SUTIONO", "SUUD", "SUWANDAR",
+    "SUWARTO", "UST. SIROJUL M", "WAHZUDI", "WIDIANTO", "YULIANTO", "YUNUS/MANU",
+    "YUSI", "ZUHRONI"
+];
+
+function initDefaultDataForYear(year) {
+    return defaultNames.map((name, index) => {
+        const row = { no: index + 1, name: name };
+        MONTHS.forEach(m => row[m] = '');
+        return row;
+    });
 }
 
-// Muat data dari localStorage
-function loadData() {
-    const saved = localStorage.getItem('attendanceData');
+function loadAllData() {
+    const saved = localStorage.getItem('attendanceAllData');
     if (saved) {
-        attendanceData = JSON.parse(saved);
+        allData = JSON.parse(saved);
+        YEARS.forEach(y => {
+            if (!allData[y]) allData[y] = initDefaultDataForYear(y);
+        });
     } else {
-        initDefaultData();
+        allData = {};
+        YEARS.forEach(y => allData[y] = initDefaultDataForYear(y));
     }
 }
 
-// Simpan data ke localStorage
 function saveData() {
-    localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
-    alert('✅ Data berhasil disimpan!');
+    localStorage.setItem('attendanceAllData', JSON.stringify(allData));
+    alert('✅ Data tahun ' + currentYear + ' berhasil disimpan!');
 }
 
-// Tampilkan halaman anggota
 function showMemberPage() {
     isAdmin = false;
     renderPage();
 }
 
-// Tampilkan form login panitia
 function showAdminLogin() {
     document.getElementById('adminLoginForm').classList.remove('hidden');
 }
@@ -183,11 +203,9 @@ function hideAdminLogin() {
     document.getElementById('adminLoginForm').classList.add('hidden');
 }
 
-// Login panitia
 function loginAdmin() {
     const id = document.getElementById('adminId').value.trim();
     const pass = document.getElementById('adminPass').value.trim();
-    
     if (id === ADMIN_ID && pass === ADMIN_PASS) {
         isAdmin = true;
         renderPage();
@@ -196,7 +214,6 @@ function loginAdmin() {
     }
 }
 
-// Keluar
 function logout() {
     document.getElementById('loginPage').classList.remove('hidden');
     document.getElementById('mainPage').classList.add('hidden');
@@ -204,66 +221,45 @@ function logout() {
     isAdmin = false;
 }
 
-// Render tabel
-function renderPage() {
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('mainPage').classList.remove('hidden');
-    
-    // Tampilkan keterangan akses
-    document.getElementById('accessNote').innerHTML = isAdmin 
-        ? '🔑 <strong>Mode Panitia:</strong> Anda dapat mengedit dan mengelola data.'
-        : '👁️ <strong>Mode Anggota:</strong> Lihat saja, tidak dapat mengubah data.';
-    
-    // Tampil/sembunyikan toolbar panitia
-    document.getElementById('adminToolbar').classList.toggle('hidden', !isAdmin);
-    
+function changeYear() {
+    currentYear = document.getElementById('yearSelect').value;
     renderTable();
 }
 
-// Render isi tabel
+function renderPage() {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('mainPage').classList.remove('hidden');
+    document.getElementById('accessNote').innerHTML = isAdmin 
+        ? '🔑 <strong>Mode Panitia:</strong> Anda dapat mengedit dan mengelola data untuk semua tahun.'
+        : '👁️ <strong>Mode Anggota:</strong> Lihat saja, tidak dapat mengubah data.';
+    document.getElementById('adminToolbar').classList.toggle('hidden', !isAdmin);
+    document.getElementById('yearSelect').value = currentYear;
+    renderTable();
+}
+
 function renderTable() {
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
+    const data = allData[currentYear];
     
-    attendanceData.forEach((row, idx) => {
+    data.forEach((row, idx) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${row.no}</td>
-            <td><input type="text" class="${isAdmin?'editable':'readonly'}" 
-                value="${row.name}" 
-                data-field="name" data-index="${idx}" ${!isAdmin?'readonly':''}></td>
-            <td><input type="text" class="${isAdmin?'editable':'readonly'}" 
-                value="${row.jan}" 
-                data-field="jan" data-index="${idx}" ${!isAdmin?'readonly':''}></td>
-            <td><input type="text" class="${isAdmin?'editable':'readonly'}" 
-                value="${row.feb}" 
-                data-field="feb" data-index="${idx}" ${!isAdmin?'readonly':''}></td>
-            <td><input type="text" class="${isAdmin?'editable':'readonly'}" 
-                value="${row.apr}" 
-                data-field="apr" data-index="${idx}" ${!isAdmin?'readonly':''}></td>
-            <td><input type="text" class="${isAdmin?'editable':'readonly'}" 
-                value="${row.mei}" 
-                data-field="mei" data-index="${idx}" ${!isAdmin?'readonly':''}></td>
-            <td><input type="text" class="${isAdmin?'editable':'readonly'}" 
-                value="${row.jun}" 
-                data-field="jun" data-index="${idx}" ${!isAdmin?'readonly':''}></td>
-            <td><input type="text" class="${isAdmin?'editable':'readonly'}" 
-                value="${row.jul}" 
-                data-field="jul" data-index="${idx}" ${!isAdmin?'readonly':''}></td>
-            <td class="sum-cell">${calculateSum(row)}</td>
-        `;
+        let cells = `<td>${row.no}</td><td><input type="text" class="${isAdmin?'editable':'readonly'}" value="${row.name}" data-field="name" data-index="${idx}" ${!isAdmin?'readonly':''}></td>`;
+        MONTHS.forEach(m => {
+            cells += `<td><input type="text" class="${isAdmin?'editable':'readonly'}" value="${row[m]}" data-field="${m}" data-index="${idx}" ${!isAdmin?'readonly':''}></td>`;
+        });
+        cells += `<td class="sum-cell">${calculateRowSum(row)}</td>`;
+        tr.innerHTML = cells;
         tbody.appendChild(tr);
     });
     
-    // Tambah event listener untuk input
     if (isAdmin) attachInputListeners();
     calculateTotals();
 }
 
-// Hitung jumlah per baris
-function calculateSum(row) {
+function calculateRowSum(row) {
     let total = 0;
-    ['jan','feb','apr','mei','jun','jul'].forEach(m => {
+    MONTHS.forEach(m => {
         const val = String(row[m] || '').trim();
         if (val !== '' && val !== 'V' && val !== 'v') {
             const num = parseInt(val);
@@ -273,60 +269,58 @@ function calculateSum(row) {
     return total || '';
 }
 
-// Hitung total bawah
 function calculateTotals() {
-    const months = ['jan','feb','apr','mei','jun','jul'];
+    const data = allData[currentYear];
     let grandTotal = 0;
-    
-    months.forEach(m => {
+    MONTHS.forEach(m => {
         let sum = 0;
-        attendanceData.forEach(row => {
+        data.forEach(row => {
             const val = String(row[m] || '').trim();
             if (val !== '' && val !== 'V' && val !== 'v') {
                 const num = parseInt(val);
                 if (!isNaN(num)) sum += num;
             }
         });
-        document.getElementById(`total-${m}`).textContent = sum;
+        const monthId = 'total-' + m;
+        document.getElementById(monthId).textContent = sum;
         grandTotal += sum;
     });
-    
     document.getElementById('total-total').textContent = grandTotal;
 }
 
-// Event saat input berubah
 function attachInputListeners() {
     document.querySelectorAll('input.editable').forEach(input => {
         input.addEventListener('input', function() {
             const idx = parseInt(this.dataset.index);
             const field = this.dataset.field;
-            attendanceData[idx][field] = this.value;
+            allData[currentYear][idx][field] = this.value;
             renderTable();
         });
     });
 }
 
-// Tambah baris baru
 function addNewRow() {
-    attendanceData.push({
-        no: attendanceData.length + 1,
-        name: '',
-        jan: '', feb: '', apr: '', mei: '', jun: '', jul: ''
+    const data = allData[currentYear];
+    const newRow = { no: data.length + 1, name: '' };
+    MONTHS.forEach(m => newRow[m] = '');
+    YEARS.forEach(y => {
+        if (y !== currentYear) {
+            newRow.no = allData[y].length + 1;
+            allData[y].push({...newRow});
+        }
     });
+    data.push(newRow);
     renderTable();
 }
 
-// Kosongkan semua data
 function clearAllData() {
-    if (confirm('⚠️ Yakin ingin menghapus SEMUA data? Tindakan ini tidak bisa dibatalkan!')) {
-        localStorage.removeItem('attendanceData');
-        initDefaultData();
+    if (confirm('⚠️ Yakin ingin menghapus SEMUA data untuk tahun ' + currentYear + '? Tindakan ini tidak bisa dibatalkan!')) {
+        allData[currentYear] = initDefaultDataForYear(currentYear);
         renderTable();
     }
 }
 
-// Inisialisasi saat halaman dimuat
-loadData();
+loadAllData();
 </script>
 
 </body>
